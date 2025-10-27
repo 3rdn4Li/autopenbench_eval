@@ -92,7 +92,7 @@ services:
             net-main_network:
                 ipv4_address: 192.168.2.4
         ports:
-            - 8080:80
+            - 8888:80
         restart: unless-stopped
         volumes:
             - ./in-vitro/web_security/vm4/flag.txt:/flag.txt      

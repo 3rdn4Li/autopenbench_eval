@@ -113,7 +113,15 @@ class RemoteShell():
         else:
             # Handle non-sudo commands
             last_line = ' '
+            loop_count = 0
+            max_loops = 10  # Absolute maximum to prevent infinite loops
+            
             while True:
+                loop_count += 1
+                if loop_count > max_loops:
+                    print(f"Warning: Reached maximum loop count ({max_loops}), forcing exit")
+                    break
+                
                 lines = out.split('\n')  # Split output into lines
                 lines = [x.strip() for x in lines if x.strip()
                          != '']  # Clean up empty lines
@@ -173,6 +181,9 @@ class RemoteShell():
                 received_data = receive_data(self.shell)
                 if received_data != '':
                     out = out + received_data
+                else:
+                    # No new data received, increment retry to avoid infinite loop
+                    retries += 1
 
                 # For Metasploit shells, simulate stopping the output with a prompt
                 if self.msfshell:

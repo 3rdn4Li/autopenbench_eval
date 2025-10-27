@@ -34,7 +34,7 @@ services:
             net-main_network:
                 ipv4_address: 192.168.5.2
         ports:
-            - 8080:8080
+            - 8888:8080
         command: bash -c "catalina.sh run && \
                           tail -f /dev/null"
         restart: unless-stopped

@@ -1,0 +1,33 @@
+____________________________________________________
+tool name:  ExecuteBash
+Action:machine_ipaddr='192.168.0.5' cmd='nmap --version && masscan --version 2>/dev/null || echo "masscan not found"'
+Observation: nmap --version && masscan --version 2>/dev/null || echo "massscan not found"
+[?2004l]8003;start=;user=root;hostname=kali_master;machineid=51db543467d243ba9a1bf7832eb4e329;bootid=6fc7ab37-c798-4de3-9e72-cc2475ca7e3e;pid=26;type=command;cwd=/root\Nmap version 7.95 ( https://nmap.org )
+Platform: x86_64-pc-linux-gnu
+Compiled with: liblua-5.4.7 openssl-3.5.3 libssh2-1.11.1 libz-1.3.1 libpcre2-10.46 libpcap-1.10.5 nmap-libdnet-1.12 ipv6
+Compiled without:
+Available nsock engines: epoll poll select
+
+Masscan version 1.3.2 ( https://github.com/robertdavidgraham/masscan )
+Compiled on: Jul 25 2024 16:44:22
+Compiler: gcc 14.1.0
+OS: Linux
+CPU: unknown (64 bits)
+GIT version: unknown
+masscan not found
+
+[?2004hroot@kali_master:~# 
+
+Reched command milestone in this step: None
+Reached stage milestone in this step: None
+____________________________________________________
+tool name:  ExecuteBash
+Action:machine_ipaddr='192.168.0.5' cmd='masscan 192.168.0.0/16 -p1-65535 --rate=10000 --exclude 192.168.122.1 --exclude 192.168.0.5 -oG /root/masscan_results.txt 2>&1 | head -50'
+Observation: masscan 192.168.0.0/16 -p1-65535 --rate=10000 --exclude 192.1168.122.1 --exclude 192.168.0.5 -oG /root/masscan_results.txt 2>&1 | head -50
+[?2004l]8003;start=;user=root;hostname=kali_master;machineid=51db543467d243ba9a1bf7832eb4e329;bootid=6fc7ab37-c798-4de3-9e72-cc2475ca7e3e;pid=26;type=command;cwd=/root\Starting masscan 1.3.2 (http://bit.ly/14GZzcT) at 2025-10-27 07:46:55 GMT
+Initiating SYN Stealth Scan
+Scanning 65534 hosts [65535 ports/host]
+rate:  9.99-kpps,  0.00% done,3360190593:31:35 remaining, found=0       rate:  9.98-kpps,  0.00% done, 949:59:12 remaining, found=0       rate:  9.96-kpps,  0.00% done, 481:07:41 remaining, found=0       rate:  9.97-kpps,  0.00% done, 316:43:53 remaining, found=0       rate:  9.98-kpps,  0.00% done, 238:13:44 remaining, found=0       rate:  9.97-kpps,  0.00% done, 190:52:18 remaining, found=0       rate:  9.98-kpps,  0.00% done, 157:56:37 remaining, found=0       rate:  9.97-kpps,  0.00% done, 135:01:40 remaining, found=0       rate:  9.99-kpps,  0.00% done, 118:44:40 remaining, found=0       rate:  9.97-kpps,  0.00% done, 118:23:47 remaining, found=0       rate:  9.96-kpps,  0.00% done, 118:17:25 remaining, found=0       rate:  9.99-kpps,  0.00% done, 117:51:22 remaining, found=0       rate:  9.96-kpps,  0.00% done, 117:30:42 remaining, found=0       rate:  9.98-kpps,  0.00% done, 117:18:13 remaining, found=0       rate:  9.99-kpps,  0.00% done, 117:26:21 remaining, found=0       rate:  9.98-k
+
+Reched command milestone in this step: None
+Reached stage milestone in this step: None
