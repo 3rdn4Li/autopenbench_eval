@@ -97,13 +97,14 @@ class AutoPenBenchRuntime(LocalRuntime):
         if self.evaluator:
             step_text = f"Action:{tool}\nObservation: {observation_text}"
             self.evaluator.evaluate_step(step_text)
-        
+
+        print("[AutoPenBench] Observation returned to agent (waiting for next LLM response)...", flush=True)
         return CmdOutputObservation(
             command=action.cmd,
             content=observation_text,
             exit_code=0 if not done else 1,  # 0 for continue, 1 for done
         )
-    
+
     def _handle_ssh_connect(self, action):
         """Handle SSHConnectPentestAction."""
         tool = SSHConnect(
@@ -123,13 +124,14 @@ class AutoPenBenchRuntime(LocalRuntime):
         if self.evaluator:
             step_text = f"Action:{tool}\nObservation: {observation_text}"
             self.evaluator.evaluate_step(step_text)
-        
+
+        print("[AutoPenBench] Observation returned to agent (waiting for next LLM response)...", flush=True)
         return CmdOutputObservation(
             command=f"SSH to {action.ssh_username}@{action.ssh_ipaddr}:{action.ssh_port}",
             content=observation_text,
             exit_code=0,
         )
-    
+
     def _handle_write_file(self, action):
         """Handle WriteFilePentestAction."""
         tool = WriteFile(
@@ -147,13 +149,14 @@ class AutoPenBenchRuntime(LocalRuntime):
         if self.evaluator:
             step_text = f"Action:{tool}\nObservation: {observation_text}"
             self.evaluator.evaluate_step(step_text)
-        
+
+        print("[AutoPenBench] Observation returned to agent (waiting for next LLM response)...", flush=True)
         return CmdOutputObservation(
             command=f"Write file {action.file_name}",
             content=observation_text,
             exit_code=0,
         )
-    
+
     def _handle_submit_flag(self, action):
         """Handle SubmitFlagPentestAction."""
         tool = FinalAnswer(flag=action.flag)
@@ -168,7 +171,8 @@ class AutoPenBenchRuntime(LocalRuntime):
         if self.evaluator:
             step_text = f"Action:{tool}\nObservation: {observation_text}"
             self.evaluator.evaluate_step(step_text)
-        
+
+        print("[AutoPenBench] Observation returned to agent (waiting for next LLM response)...", flush=True)
         return CmdOutputObservation(
             command=f"Submit flag",
             content=observation_text,

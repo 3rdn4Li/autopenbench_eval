@@ -25,18 +25,37 @@ async def main():
                        help='Benchmark level')
     parser.add_argument('--category', required=True,
                        help='Category name (e.g., access_control, cve)')
-    
+    parser.add_argument('--instance-idx', type=int, default=None,
+                       help='Run only this instance index (0-based). Default: run all.')
     args = parser.parse_args()
-    
-    # Check API keys
-    ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
-    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-    
-    if not ANTHROPIC_API_KEY:
-        print("❌ Error: ANTHROPIC_API_KEY not set")
-        sys.exit(1)
-    
-    if not OPENAI_API_KEY:
+
+    # Resolve LLM API key by provider
+    # OPENHANDS_LLM_MODEL: anthropic/claude-opus-4-6 | together_ai/moonshotai/Kimi-K2.5 | etc.
+    openhands_model = os.getenv('OPENHANDS_LLM_MODEL')
+    if openhands_model and openhands_model.startswith('anthropic/'):
+        anthropic_key = (
+            os.getenv('OPENHANDS_LLM_API_KEY') or os.getenv('ANTHROPIC_API_KEY')
+        )
+        if not anthropic_key:
+            print("❌ Error: For anthropic/ model set ANTHROPIC_API_KEY or OPENHANDS_LLM_API_KEY")
+            sys.exit(1)
+    elif openhands_model:
+        anthropic_key = (
+            os.getenv('OPENHANDS_LLM_API_KEY')
+            or os.getenv('TOGETHER_API_KEY')
+            or os.getenv('TOGETHERAI_API_KEY')
+        )
+        if not anthropic_key:
+            print("❌ Error: For non-Anthropic model set OPENHANDS_LLM_API_KEY or TOGETHER_API_KEY")
+            sys.exit(1)
+    else:
+        anthropic_key = os.getenv('ANTHROPIC_API_KEY')
+        if not anthropic_key:
+            print("❌ Error: ANTHROPIC_API_KEY not set (or set OPENHANDS_LLM_MODEL + provider API key)")
+            sys.exit(1)
+
+    openai_key = os.getenv('OPENAI_API_KEY')
+    if not openai_key:
         print("❌ Error: OPENAI_API_KEY not set")
         sys.exit(1)
     
@@ -49,21 +68,25 @@ async def main():
                 print(f"  - {level}/{category}")
         sys.exit(1)
     
-    # Create log directory
+    # Create log directory (include model name for easier identification)
     from datetime import datetime
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_dir = project_root / "logs" / "openhands_experiments" / f"{args.level}_{args.category}_{timestamp}"
+    model = os.getenv('OPENHANDS_LLM_MODEL', 'anthropic/claude-sonnet-4-5-20250929')
+    model_safe = model.replace("/", "_")
+    log_dir = project_root / "logs" / "openhands_experiments" / f"{args.level}_{args.category}_{model_safe}_{timestamp}"
     log_dir.mkdir(parents=True, exist_ok=True)
-    
+
+    print(f"🤖 OpenHands model: {model}")
     print(f"📁 Logs will be saved to: {log_dir}\n")
-    
-    # Run category
+
+    # Run category (or single instance if --instance-idx set)
     results = await run_category(
         level=args.level,
         category=args.category,
-        anthropic_key=ANTHROPIC_API_KEY,
-        openai_key=OPENAI_API_KEY,
+        anthropic_key=anthropic_key,
+        openai_key=openai_key,
         log_dir=log_dir,
+        instance_idx=args.instance_idx,
     )
     
     # Print summary

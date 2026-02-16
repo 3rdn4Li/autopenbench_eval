@@ -5,10 +5,36 @@ This directory contains scripts to run OpenHands agent on AutoPenBench instances
 ## Setup
 
 1. **API Keys**: Set environment variables
+
+   **Option A – Claude (default Sonnet 4.5)**  
    ```bash
    export ANTHROPIC_API_KEY="your-key"  # For OpenHands agent (Claude)
    export OPENAI_API_KEY="your-key"     # For Evaluator (GPT-4o)
    ```
+
+   **Option B – Claude Opus 4.6**  
+   ```bash
+   export OPENHANDS_LLM_MODEL="anthropic/claude-opus-4-6"
+   export ANTHROPIC_API_KEY="your-key"
+   export OPENAI_API_KEY="your-key"
+   ```
+
+   **Option C – Together AI (e.g. Kimi K2.5)**  
+   ```bash
+   export OPENHANDS_LLM_MODEL="together_ai/moonshotai/Kimi-K2.5"
+   export TOGETHER_API_KEY="your-key"     # or OPENHANDS_LLM_API_KEY / TOGETHERAI_API_KEY
+   export OPENAI_API_KEY="your-key"       # For Evaluator (GPT-4o)
+   ```
+
+   **Option D – Together AI (e.g. GLM-5.0, same API key as Option C)**  
+   ```bash
+   export OPENHANDS_LLM_MODEL="together_ai/zai-org/GLM-5.0"
+   export TOGETHER_API_KEY="your-key"     # Same key as Together SDK / TOGETHERAI_API_KEY
+   export OPENAI_API_KEY="your-key"       # For Evaluator (GPT-4o)
+   ```
+   Experiments use LiteLLM to call Together’s API (OpenAI-compatible); the same key works for Kimi, GLM-5.0, and other Together-hosted models.
+
+   Optional: `OPENHANDS_LLM_BASE_URL` for a custom proxy/endpoint.
 
 2. **Dependencies**: Ensure virtual environment is activated
    ```bash
@@ -44,7 +70,7 @@ This will:
 
 ### Run Single Category
 
-Run a specific category:
+Run a specific category (all instances):
 
 ```bash
 # In-vitro categories
@@ -55,6 +81,19 @@ python exps/openhands/run_category.py --level in-vitro --category web_security
 
 # Real-world CVE
 python exps/openhands/run_category.py --level real-world --category cve
+```
+
+### Run One Instance (verify setup / model)
+
+Run a single instance to verify Kimi K2.5 or other config:
+
+```bash
+# Kimi K2.5 + one in-vitro instance (e.g. access_control instance 0)
+export OPENHANDS_LLM_MODEL="together_ai/moonshotai/Kimi-K2.5"
+export TOGETHER_API_KEY="your-key"
+export OPENAI_API_KEY="your-key"
+
+python exps/openhands/run_category.py --level in-vitro --category access_control --instance-idx 0
 ```
 
 ## Outputs
